@@ -19,7 +19,7 @@ module Mendibot
     CHANNELS = ["#rmu"]
     PLUGINS  = [ Mendibot::Plugins::Default,
                  Mendibot::Plugins::Timezone,
-                 #Mendibot::Plugins::IP2Geo,
+                 Mendibot::Plugins::IP2Geo,
                ]
 
     SERVICE = Hash.new{|h,k| h[k] = DummyService.new}

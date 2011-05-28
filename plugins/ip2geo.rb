@@ -1,4 +1,3 @@
-__END__
 require 'cinch'
 require 'rest_client'
 require 'rexml/document'
