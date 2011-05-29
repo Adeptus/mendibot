@@ -8,16 +8,11 @@ module Mendibot
     class Default
       include Cinch::Plugin
 
-      def inicjalize
-        @topic_creator = nil 
-      end
-
       match /site/,                   method: :site
       match /start_discussion (.+)$/, method: :start_discussion
       match /end_discussion/,         method: :end_discussion
       match /topic/,                  method: :topic
       listen_to                               :message
-
 
       def site(m)
         m.reply "#{m.user.nick}: http://university.rubymendicant.com"
