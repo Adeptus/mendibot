@@ -16,7 +16,7 @@ module Mendibot
     PORT     = 6667
     NICK     = "mendibot"
     PASSWORD = nil
-    CHANNELS = ["##Adeptus"]
+    CHANNELS = ["#rmu"]
     PLUGINS  = [ Mendibot::Plugins::Default,
                  Mendibot::Plugins::Timezone,
                  Mendibot::Plugins::IP2Geo,
