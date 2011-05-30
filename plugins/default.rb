@@ -23,8 +23,8 @@ module Mendibot
       def start_discussion(m, topic)
         Mendibot::TOPICS[m.channel] = topic
 
-        Mendibot::TOPICCREATORS[m.channel] = m.user.nick
-        timer(m, 900, "ping_user_before_close_topic")
+        Mendibot::TOPIC_CREATORS[m.channel] = m.user.nick
+        timer(m, 900, :ping_user_before_close_topic)
 
         m.reply "The topic under discussion is now '#{topic}'"
       rescue Exception => e
@@ -42,7 +42,7 @@ module Mendibot
           m.reply "There is no topic under discussion at the moment"
         end
         
-        Mendibot::TOPICCREATORS[m.channel] = nil
+        Mendibot::TOPIC_CREATORS[m.channel] = nil
         timer(m, nil)
 
       rescue Exception => e
@@ -64,7 +64,7 @@ module Mendibot
       end
 
       def listen(m)
-        if Mendibot::TOPICCREATORS[m.channel] == m.user.nick
+        if Mendibot::TOPIC_CREATORS[m.channel] == m.user.nick
           timer(m, nil)
           timer(m, 900, :ping_user_before_close_topic)
         end
