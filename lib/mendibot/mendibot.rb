@@ -31,9 +31,9 @@ module Mendibot
             :recorded_at   => DateTime.now,
             :topic         => Mendibot::TOPICS[m.channel],
             :topic_creator => Mendibot::TOPIC_CREATORS[m.channel],
-            :thread        => Mendibot::THREAD[m.channel]
           }.to_json
 
+          Mendibot::THREAD[m.channel]
           Mendibot::Config::SERVICE["/chat/messages.json"].post(:message => msg)
         rescue Exception => e
           bot.logger.debug e.message
