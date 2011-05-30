@@ -23,11 +23,13 @@ module Mendibot
       on :channel do |m|
         begin
           msg = { 
-            :channel     => m.channel, 
-            :handle      => m.user, 
-            :body        => m.message.encode("UTF-8", :invalid => :replace, :undef => :replace), 
-            :recorded_at => DateTime.now,
-            :topic       => Mendibot::TOPICS[m.channel]
+            :channel       => m.channel, 
+            :handle        => m.user, 
+            :body          => m.message.encode("UTF-8", :invalid => :replace, :undef => :replace), 
+            :recorded_at   => DateTime.now,
+            :topic         => Mendibot::TOPICS[m.channel],
+            :topic_creator => Mendibot::TOPICCREATORS[m.channel],
+            :thread        => Mendibot::THREAD[m.channel]
           }.to_json
 
           Mendibot::Config::SERVICE["/chat/messages.json"].post(:message => msg)

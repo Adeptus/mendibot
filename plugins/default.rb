@@ -23,7 +23,7 @@ module Mendibot
       def start_discussion(m, topic)
         Mendibot::TOPICS[m.channel] = topic
 
-        @topic_creator = m.user.nick
+        Mendibot::TOPICCREATORS[m.channel] = m.user.nick
         timer(m, 900, "ping_user_before_close_topic")
 
         m.reply "The topic under discussion is now '#{topic}'"
@@ -42,8 +42,8 @@ module Mendibot
           m.reply "There is no topic under discussion at the moment"
         end
         
-        @topic_creator = nil
-        timer(m, nil, "stop")
+        Mendibot::TOPICCREATORS[m.channel] = nil
+        timer(m, nil)
 
       rescue Exception => e
         m.reply "Failed to end discussion"
@@ -64,39 +64,41 @@ module Mendibot
       end
 
       def listen(m)
-        if @topic_creator == m.user.nick
-          timer(m, nil, "stop")
-          timer(m, 900, "ping_user_before_close_topic")
+        if Mendibot::TOPICCREATORS[m.channel] == m.user.nick
+          timer(m, nil)
+          timer(m, 900, :ping_user_before_close_topic)
         end
+      rescue Exception => e
+        m.reply "Failed listen method"
+        bot.logger.debug e.message
       end
 
-      def timer(m, seconds, option = nil)
-        if option == "ping_user_before_close_topic"
-          @thread = Thread.new do
-            sleep seconds
-            ping_user_before_close_topic(m)
-          end
-        
-        elsif option == "end_topic_by_timeout"
-          @thread = Thread.new do
-            sleep seconds
-            end_discussion(m)
-          end
-
+      def timer(m, timeout, method = nil)
+        if method == nil
+          Mendibot::THREAD[m.channel].kill
         else
-          @thread.kill
+          Mendibot::THREAD[m.channel] = Thread.new do
+            sleep timeout
+            send(method, m)
+          end
         end
+      rescue Exception => e
+        m.reply "Failed timer method"
+        bot.logger.debug e.message
       end
           
       def ping_user_before_close_topic(m)
         m.reply "#{m.user.nick}: Please continue topic discussion or" +
                                  " topic will close in five minutes"
 
-        timer(m, 300, "end_topic_by_timeout")
+        timer(m, 300, :end_discussion)
+      rescue Exception => e
+        m.reply "Failed ping method"
+        bot.logger.debug e.message
       end
 
     end
 
   end
-
+  
 end
