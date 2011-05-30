@@ -5,9 +5,9 @@ require 'time'
 module Mendibot
   extend self
 
-  TOPICS        = {}
+  TOPICS         = {}
   TOPIC_CREATORS = {}
-  THREAD        = {}
+  THREAD         = {}
 
   def run(options = {})
     opts = parse_options(options)
@@ -30,7 +30,7 @@ module Mendibot
             :body          => m.message.encode("UTF-8", :invalid => :replace, :undef => :replace), 
             :recorded_at   => DateTime.now,
             :topic         => Mendibot::TOPICS[m.channel],
-            :topic_creator => Mendibot::TOPIC_CREATORS[m.channel],
+            :topic_creator => Mendibot::TOPIC_CREATORS[m.channel]
           }.to_json
 
           Mendibot::THREAD[m.channel]
